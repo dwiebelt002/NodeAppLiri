@@ -74,6 +74,7 @@ var writeObj = "";
 //twitter function below grabs the last 20 tweets from @DevinWiebelt user account
 function getTweetData() {
 
+//using our data grabbed from the twitter keys we now store them in the client variable
 var client = new twitter({
     consumer_key: keysTwitter.consumer_key,
     consumer_secret: keysTwitter.consumer_secret,
@@ -93,26 +94,29 @@ var client = new twitter({
         console.log('#' + (i + 1) + response[i].text);
         console.log('This tweet was posted on: ' + response[i].created_at);
 
+    //constructs the string that will ultimately go to log.txt
         writeObj += ', ' + '#' + (i + 1) + ": " + response[i].text + response[i].created_at;
 
      };
 
+    //command added
      writeObj = command + "" + writeObj + "\n";
 
+    //writes to log.txt
      writeToLog(writeObj);
 
     });
 
 };
 
-
+//using spotify api this function pulls 5 results based on our song we have set in parameter
 function getMusicData(parameter) {
 
    if (!parameter) {
         parameter = "ten+thousand+fists";
     };
 
-    
+  //api url - this is what sets our limit to getting 5 results back as well 
     var queryUrl = 'https://api.spotify.com/v1/search?q='+ parameter +'&limit=5&type=track';
 
     
@@ -122,9 +126,10 @@ function getMusicData(parameter) {
             console.log(err);
         };
         
+        //this will format info and make what we pull easier to read
         body = JSON.parse(body);
 
-        
+        //writes our info in an organized manner based on catagory
         console.log('--------------------------------------------------------------');
         console.log('The top results based on your search are the following:');
         for (var i = 0; i < body.tracks.items.length; i++) {
@@ -135,13 +140,16 @@ function getMusicData(parameter) {
             console.log('Album Name: '+body.tracks.items[i].album.name);
             console.log('--------------------------------------------------------------');
             
+            //writes response and query to log.txt
             writeObj = command+", "+parameter+", "+body.tracks.items[i].artists[0].name+", "+body.tracks.items[i].name+", "+body.tracks.items[i].preview_url+", "+body.tracks.items[i].album.name+"\n"; 
         };
         
+        //writes info to log.txt
         writeToLog(writeObj);
     });
 };
 
+//this function will pull up movie data based on our set search parameter using omdb API
 function getMovieData() {
     if (!parameter) {
         parameter = "Star+Trek+Into+Darkness";
@@ -154,7 +162,7 @@ function getMovieData() {
             console.log(err);
         } 
        
-
+        //like the music, we have everything formatted so everything is easy to read for user
         body = JSON.parse(body);
         console.log('--------------------------------------------------------------');
         console.log('Title: '+ body.Title);
@@ -168,8 +176,10 @@ function getMovieData() {
         console.log('Rotten Tomatoes URL: '+ body.tomatoURL);
         console.log('--------------------------------------------------------------');
         
+        //query and response write to log.txt
         writeObj = command+", "+parameter+", "+body.Title+", "+body.Year+", "+body.imdbRating+", "+body.Country+", "+body.Language+", "+body.Plot+", "+body.Actors+", "+body.tomatoRating+", "+body.tomatoURL+"\n";
 
+        //info data writes to log.txt file
         writeToLog(writeObj);
     });
 };
@@ -182,11 +192,13 @@ function doSomething(parameter) {
             console.log(err);
         };
 
+        //we are pulling data from the random.txt file to use as our new parameter
         var randomOutput = data.toString().split(',');
 
         command = randomOutput[0];
         parameter = randomOutput[1];
-
+        
+        //parameter applies like before setting it to its proper catagory based on write up on the file
         switch (command) {
             case 'my-tweets':
                 getTweetData();
@@ -198,6 +210,7 @@ function doSomething(parameter) {
                 getMovieData(parameter);
             break;
             
+            //if user input is not recognized this will console.log out 
             default:
                 console.log('What you entered is not recognized. Please try again.');
         };
