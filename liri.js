@@ -162,3 +162,33 @@ function getMovieData() {
         writeToLog(writeObj);
     });
 };
+
+function doSomething(parameter) {
+
+    fs.readFile('random.txt', 'utf8', function(err, data){
+
+        if (err) {
+            console.log(err);
+        };
+
+        var randomOutput = data.toString().split(',');
+
+        command = randomOutput[0];
+        parameter = randomOutput[1];
+
+        switch (command) {
+            case 'my-tweets':
+                getTweetData();
+            break;
+            case 'spotify-this-song':
+                getMusicData(parameter);
+            break;
+            case 'movie-this':
+                getMovieData(parameter);
+            break;
+            
+            default:
+                console.log('What you entered is not recognized. Please try again.');
+        };
+    });
+};
