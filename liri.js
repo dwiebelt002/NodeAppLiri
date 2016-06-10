@@ -95,45 +95,39 @@ var client = new twitter({
 };
 
 
-function getMusicData() {
+function getMusicData(parameter) {
 
-    if (value) {
+   if (!parameter) {
+        parameter = "ten+thousand+fists";
+    };
 
-        var song = value;
+    
+    var queryUrl = 'https://api.spotify.com/v1/search?q='+parameter+'&limit=5&type=track';
 
-    }
-
-    else {
-
-        var song = "what's my age again?";
-    }
-
-    spotify.search({ type: 'track', query: song}, function(err, data){
-
-        if(err) {
+    
+    request(queryUrl, function(err, response, body){
+      
+        if (err) {
             console.log(err);
-            return;
-        }
+        };
+        
+        body = JSON.parse(body);
 
-        else {
+        
+        console.log('--------------------------------------------------------------');
+        console.log('The top results based on your search are the following:');
+        for (var i = 0; i < body.tracks.items.length; i++) {
+            
+            console.log('Artist(s): '+body.tracks.items[i].artists[0].name);
+            console.log('Song Title: '+body.tracks.items[i].name);
+            console.log('Preview Link: '+body.tracks.items[i].preview_url);
+            console.log('Album Name: '+body.tracks.items[i].album.name);
+            console.log('--------------------------------------------------------------');
+            
+            writeObj = command+", "+parameter+", "+body.tracks.items[i].artists[0].name+", "+body.tracks.items[i].name+", "+body.tracks.items[i].preview_url+", "+body.tracks.items[i].album.name+"\n"; 
+        };
+        
+        writeToLog(writeObj);
+    });
+};
 
-            console.dir('Artist: ' + data.tracks.items[0].artists[0].name);
-            console.dir('Song Name: ' + data.tracks.items[0].name);
-            console.dir('Preview Link: ' + data.tracks.items[0].preview_url);
-            console.dir('Album: ' + data.tracks.items[0].album.name);
-
-            logText = JSON.stringify({
-                artist: data.tracks.items[0].artists[0].name,
-                songName: data.tracks.items[0].name,
-                previewLink: data.tracks.items[0].preview_url,
-                album: data.tracks.items[0].album.name,
-
-            })
-
-
-        }
-    })
-
-
-
-}
