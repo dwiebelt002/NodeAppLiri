@@ -1,27 +1,35 @@
 //require command allows twitter keys from keys.js to access file
 var keys = require('./keys.js');
 
+//grabs the access keys, keeps the for later in variable keysTwitter
 var keysTwitter = keys.twitterKeys;
 
+//our general request variable
 var request = require('request');
 
+//gets access into files
 var fs = require('fs');
 
+//varibles for arguments
 var command = process.argv[2];
 
 var value = process.argv[3];
 
+//parameter variable allows access to inputs we have put in queries
 var parameter = process.argv.slice(3).join('+');
 
+//require pulls from twitter and spotify apis 
 var twitter = require ('twitter');
 
+var spotify = require('spotify');
+
+//parameters to our search query for my twitter account
 var twitterParams = {
     screen_name: 'DevinWiebelt',
     count: 20,
 }
 
-var spotify = require('spotify');
-
+//this function will write to the txt.log file
 function writeToLog(textParam) {
     fs.appendFile('log.txt', textParam, function(err) {
         if (err) {
@@ -32,6 +40,7 @@ function writeToLog(textParam) {
     });
 };
 
+//the following code controls what data you get based on the user input
     switch (command) {
         case 'my-tweets':
             getTweetData();
@@ -59,8 +68,10 @@ function writeToLog(textParam) {
          
     };
 
+//this placeholder will be the string variable that will write to our log.txt file
 var writeObj = "";
 
+//twitter function below grabs the last 20 tweets from @DevinWiebelt user account
 function getTweetData() {
 
 var client = new twitter({
@@ -75,7 +86,7 @@ var client = new twitter({
             console.log(err);
         };
 
-    console.log('The following are my last ' + response.length + ' tweets.')
+    console.log('The following are the last ' + response.length + ' tweets from user @DevinWiebelt.')
      
      for (var i = 0; i < response.length; i++) {
 
