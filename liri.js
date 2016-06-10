@@ -54,7 +54,7 @@ function writeToLog(textParam) {
             break;
 
         default:
-            console.log('What you entered is not recognized. Please give it another try and I will do my best to assist.')
+            console.log('What you entered is not recognized. Please Try again.')
 
          
     };
@@ -102,7 +102,7 @@ function getMusicData(parameter) {
     };
 
     
-    var queryUrl = 'https://api.spotify.com/v1/search?q='+parameter+'&limit=5&type=track';
+    var queryUrl = 'https://api.spotify.com/v1/search?q='+ parameter +'&limit=5&type=track';
 
     
     request(queryUrl, function(err, response, body){
@@ -131,3 +131,34 @@ function getMusicData(parameter) {
     });
 };
 
+function getMovieData() {
+    if (!parameter) {
+        parameter = "Star+Trek+Into+Darkness";
+    };
+    
+    var queryUrl = 'http://www.omdbapi.com/?t=' + parameter +'&y=&plot=short&r=json&tomatoes=true';
+
+    request(queryUrl, function(err, response, body){
+        if (err) {
+            console.log(err);
+        } 
+       
+
+        body = JSON.parse(body);
+        console.log('--------------------------------------------------------------');
+        console.log('Title: '+ body.Title);
+        console.log('Year released: '+ body.Year);
+        console.log('IMDB rating: '+ body.imdbRating);
+        console.log('Countries Released in: '+ body.Country);
+        console.log('Languages Released in: '+ body.Language);
+        console.log('Plot: '+ body.Plot);
+        console.log('Actors: '+ body.Actors);
+        console.log('Rotten Tomatoes Rating: '+ body.tomatoRating);
+        console.log('Rotten Tomatoes URL: '+ body.tomatoURL);
+        console.log('--------------------------------------------------------------');
+        
+        writeObj = command+", "+parameter+", "+body.Title+", "+body.Year+", "+body.imdbRating+", "+body.Country+", "+body.Language+", "+body.Plot+", "+body.Actors+", "+body.tomatoRating+", "+body.tomatoURL+"\n";
+
+        writeToLog(writeObj);
+    });
+};
